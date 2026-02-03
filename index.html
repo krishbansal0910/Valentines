@@ -2,84 +2,196 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-
-<!-- 🔑 THIS FIXES ZOOM -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Labdhi, Be My Valentine 💖</title>
 
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
 <style>
+:root {
+    --pink: #ff3b6f;
+    --soft-pink: #ff7eb3;
+    --bg: linear-gradient(135deg, #ff758c, #ff7eb3);
+}
+
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
     min-height: 100vh;
-    background: linear-gradient(135deg, #ff758c, #ff7eb3);
+    background: var(--bg);
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: 'Comic Sans MS', cursive, sans-serif;
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
 }
 
+/* floating glow particles */
+.particle {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    background: rgba(255,255,255,0.4);
+    border-radius: 50%;
+    animation: floatUp 12s linear infinite;
+}
+
+@keyframes floatUp {
+    from {
+        transform: translateY(110vh);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(-10vh);
+        opacity: 1;
+    }
+}
+
+/* Card */
 .card {
-    background: white;
-    padding: 20px;
-    border-radius: 25px;
-    text-align: center;
+    background: rgba(255,255,255,0.96);
+    backdrop-filter: blur(10px);
+    padding: 22px;
+    border-radius: 28px;
     width: 90%;
     max-width: 360px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    text-align: center;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.25);
+    animation: cardEnter 1.2s ease;
+}
+
+@keyframes cardEnter {
+    from {
+        transform: translateY(30px) scale(0.95);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
 }
 
 .card img {
     width: 100%;
     border-radius: 18px;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
 }
 
 h1 {
-    color: #ff3b6f;
+    font-family: 'Playfair Display', serif;
+    color: var(--pink);
+    font-size: 1.9em;
+    margin: 6px 0;
 }
 
 p {
+    font-size: 0.95em;
     color: #555;
-    font-size: 1.05em;
+    line-height: 1.5;
 }
 
+/* Buttons */
 .buttons {
     position: relative;
-    height: 110px;
+    height: 120px;
     margin-top: 20px;
 }
 
 button {
-    padding: 12px 26px;
-    font-size: 1em;
+    padding: 13px 28px;
+    border-radius: 30px;
     border: none;
-    border-radius: 25px;
+    font-size: 0.95em;
     cursor: pointer;
     position: absolute;
-    touch-action: manipulation;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .yes {
-    background: #ff3b6f;
+    background: linear-gradient(135deg, var(--pink), var(--soft-pink));
     color: white;
     left: 50%;
     transform: translateX(-50%);
     bottom: 0;
+    box-shadow: 0 10px 25px rgba(255,59,111,0.35);
 }
 
 .no {
-    background: #ddd;
+    background: #ececec;
     color: #444;
     left: 50%;
     transform: translateX(-50%);
     top: 0;
 }
 
+button:active {
+    transform: scale(0.95);
+}
+
+/* Premium final screen */
+.title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2em;
+    margin-bottom: 8px;
+}
+
+.love {
+    margin: 14px 0;
+    font-weight: 500;
+}
+
+.lock {
+    margin: 16px 0;
+    font-size: 0.9em;
+    opacity: 0.85;
+}
+
+.lock span {
+    display: block;
+    font-size: 1.1em;
+    margin-top: 6px;
+}
+
+/* Reward */
 .reward-btn {
-    background: #ff3b6f;
+    background: linear-gradient(135deg, var(--pink), var(--soft-pink));
     color: white;
-    margin-top: 15px;
+    padding: 14px 30px;
+    border-radius: 30px;
+    box-shadow: 0 12px 28px rgba(255,59,111,0.35);
+    margin-top: 16px;
+}
+
+.coupon {
+    margin-top: 22px;
+    padding: 20px;
+    border-radius: 22px;
+    background: linear-gradient(135deg, #fff0f6, #ffe4ef);
+    animation: fadeUp 0.7s ease;
+}
+
+.coupon span {
+    display: block;
+    margin-top: 6px;
+    font-size: 1.3em;
+    font-weight: 600;
+    color: var(--pink);
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 </style>
 </head>
@@ -91,7 +203,7 @@ button {
 
     <h1>Labdhi 💕</h1>
     <p>This page exists because I really, really love you.</p>
-    <p>So… will you be my Valentine? 💘</p>
+    <p>So… will you be my Valentine?</p>
 
     <div class="buttons">
         <button class="yes" id="yesBtn">YES 💖</button>
@@ -100,18 +212,24 @@ button {
 </div>
 
 <script>
+/* floating particles */
+for (let i = 0; i < 25; i++) {
+    const p = document.createElement("div");
+    p.className = "particle";
+    p.style.left = Math.random() * 100 + "vw";
+    p.style.animationDuration = (8 + Math.random() * 8) + "s";
+    document.body.appendChild(p);
+}
+
 const noBtn = document.getElementById("noBtn");
 const yesBtn = document.getElementById("yesBtn");
+
 let tries = 0;
 let scale = 1;
 
-// 🔑 WORKS ON MOBILE
-noBtn.addEventListener("click", moveNo);
-noBtn.addEventListener("touchstart", moveNo);
-
 function moveNo() {
     tries++;
-    scale -= 0.2;
+    scale -= 0.18;
 
     const x = Math.random() * 160 - 80;
     const y = Math.random() * 70 - 35;
@@ -124,6 +242,9 @@ function moveNo() {
     }
 }
 
+noBtn.addEventListener("click", moveNo);
+noBtn.addEventListener("touchstart", moveNo);
+
 yesBtn.addEventListener("click", yesClicked);
 yesBtn.addEventListener("touchstart", yesClicked);
 
@@ -131,39 +252,53 @@ function yesClicked() {
     confettiBoom();
 
     document.getElementById("card").innerHTML = `
-        <h1>FINALLY 😌💞</h1>
-        <p>You made the right choice after three tries 😏</p>
-        <p>This page exists because I really really love you ❤️</p>
-        <p><strong>Valentine’s date locked:</strong></p>
-        <p>💖 You & Me 🗓️</p>
+        <h1 class="title">Finally 😌💞</h1>
 
-        <button class="reward-btn" onclick="showRewards()">
+        <p>You made the right choice after three tries.</p>
+
+        <p class="love">
+            This page exists because I really, really love you ❤️
+        </p>
+
+        <div class="lock">
+            Valentine’s date locked
+            <span>💖 You & Me 🗓️</span>
+        </div>
+
+        <button class="reward-btn" id="rewardBtn">
             Claim your Valentine’s reward 🎁
         </button>
 
         <div id="rewards"></div>
     `;
+
+    document.getElementById("rewardBtn")
+        .addEventListener("click", showRewards);
 }
 
 function showRewards() {
+    document.getElementById("rewardBtn").remove();
+
     document.getElementById("rewards").innerHTML = `
-        <p>🎟️ Coupons for:</p>
-        <p>🍫 Unlimited chocolates</p>
-        <p>🤗 Infinite hugs</p>
-        <p>🎬 Movie nights</p>
-        <p>😏 Kisses (redeem anytime)</p>
+        <div class="coupon">
+            🎟️ Coupons for
+            <span>IYKYK 😌</span>
+            <p style="font-size:0.85em; opacity:0.7; margin-top:6px;">
+                Valid forever. Non-transferable.
+            </p>
+        </div>
     `;
 }
 
-// 🎉 Confetti
+/* Confetti */
 function confettiBoom() {
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 90; i++) {
         const c = document.createElement("div");
         c.style.position = "fixed";
         c.style.left = "50%";
         c.style.top = "50%";
-        c.style.width = "8px";
-        c.style.height = "8px";
+        c.style.width = "7px";
+        c.style.height = "7px";
         c.style.background =
             ["#ff3b6f","#ffd166","#06d6a0","#118ab2"][Math.floor(Math.random()*4)];
         c.style.borderRadius = "50%";
